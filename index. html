@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pi Comedy Hub</title>
+  <!-- Pi Network SDK -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0f172a;
+      color: #ffffff;
+      margin: 0;
+      padding: 16px;
+    }
+    header {
+      text-align: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #334155;
+    }
+    h1 {
+      color: #f59e0b;
+      margin: 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .card {
+      background-color: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 12px;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .card h3 {
+      margin: 10px 0 5px 0;
+      color: #f8fafc;
+    }
+    .btn-pay {
+      background-color: #f59e0b;
+      color: #0f172a;
+      border: none;
+      padding: 10px 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .btn-pay:hover {
+      background-color: #d97706;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎭 Pi Comedy Hub</h1>
+    <p>Tazama Cheka na Pi Network</p>
+  </header>
+
+  <main class="grid">
+    <!-- Movie Card 1 -->
+    <div class="card">
+      <img src="https://via.placeholder.com/300x180?text=Comedy+Show+1" alt="Comedy Show">
+      <h3>Cheka Tu Season 1</h3>
+      <p>Kipindi cha vichekesho vya kusisimua.</p>
+      <button class="btn-pay" onclick="payForMovie('Cheka Tu Season 1', 1)">Lipa 1 Pi Kutazama</button>
+    </div>
+
+    <!-- Movie Card 2 -->
+    <div class="card">
+      <img src="https://via.placeholder.com/300x180?text=Standup+Comedy" alt="Standup Comedy">
+      <h3>Standup Comedy Live</h3>
+      <p>Vipindi vya jukwaani kutoka kwa mchekeshaji maarufu.</p>
+      <button class="btn-pay" onclick="payForMovie('Standup Comedy Live', 0.5)">Lipa 0.5 Pi Kutazama</button>
+    </div>
+  </main>
+
+  <script>
+    // Anza Pi SDK
+    Pi.init({ version: "2.0", sandbox: true });
+
+    function payForMovie(movieTitle, price) {
+      const paymentData = {
+        amount: price,
+        memo: "Malipo ya kutazama: " + movieTitle,
+        metadata: { movie: movieTitle }
+      };
+
+      const callbacks = {
+        onReadyForServerApproval: function(paymentId) {
+          console.log("Awaiting server approval...", paymentId);
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("Hongera! Malipo yamefanikiwa kwa " + movieTitle + ". Sasa unaweza kutazama!");
+        },
+        onCancel: function(paymentId) {
+          alert("Malipo yameghairiwa.");
+        },
+        onError: function(error, payment) {
+          console.error("Error:", error);
+          alert("Kuna makosa yametokea wakati wa kulipa.");
+        }
+      };
+
+      Pi.createPayment(paymentData, callbacks);
+    }
+  </script>
+
+</body>
+</html>
